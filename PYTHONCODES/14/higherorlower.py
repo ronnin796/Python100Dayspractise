@@ -20,11 +20,12 @@ while not game_over:
     print(compare_B['follower_count'])
 
     choice = input('Who has higher folloer . A or B: ').lower()
+    system('clear')
     personA,personB = (compare_A,compare_B) if choice == 'a' else (compare_B,compare_A)
 
 
     if compare_followers(personA,personB):
-        compare_A = personA
+        compare_A = personB
         score += 1
         print('You are Correct. Current Score = ',score)
     else:
