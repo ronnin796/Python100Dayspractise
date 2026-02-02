@@ -1,1 +1,6 @@
 100-days-of-code-python/
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
