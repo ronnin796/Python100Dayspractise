@@ -1,11 +1,12 @@
 from turtle import Turtle
 
-MOVE_DISTANCE = 10
+MOVE_DISTANCE = 20
 TURN_ANGLE = 90
 UP = 90
 DOWN = 270
 RIGHT = 0
 LEFT = 180
+SPEED = "fastest"
 
 
 class Snake:
@@ -14,14 +15,21 @@ class Snake:
         self.segments = []
 
         for position in self.starting_positions:
-            newsegment = Turtle()
-            newsegment.shape("square")
-            newsegment.color("red")
-            newsegment.penup()
-            newsegment.goto(position)
-            self.segments.append(newsegment)
+            self.create_snake(position)
 
         self.head = self.segments[0]
+
+    def create_snake(self, position):
+        newsegment = Turtle()
+        newsegment.penup()
+        newsegment.speed(SPEED)
+        newsegment.shape("square")
+        newsegment.color("red")
+        newsegment.goto(position)
+        self.segments.append(newsegment)
+
+    def increase_size(self):
+        self.create_snake(self.segments[-1].position())
 
     def move(self):
         for segment in range(len(self.segments) - 1, 0, -1):
