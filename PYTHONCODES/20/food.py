@@ -1,8 +1,8 @@
 from turtle import Turtle
 import random as rm
 
-HEIGHT = 400
-WIDTH = 400
+HEIGHT = 260
+WIDTH = 260
 
 
 class FOOD(Turtle):
