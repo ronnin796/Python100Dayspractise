@@ -1,8 +1,11 @@
 from turtle import Turtle, Screen
 from paddle import Paddle
 import time
+from scoreboard import ScoreBoard
 from ball import Ball
 
+score1 = ScoreBoard()
+score2 = ScoreBoard(position=(280, 260))
 ball = Ball()
 screen = Screen()
 screen.setup(width=800, height=600)
@@ -25,11 +28,21 @@ while game_on:
     # Collision detection
     if ball.ycor() > 280 or ball.ycor() < -280:
         ball.ball_bounce()
-    if ball.xcor() > 380 or ball.xcor() < -380:
+    # Detect Collision with edges
+    if ball.xcor() > 380:
         ball.reset()
-    if ball.xcor() > paddle1.xcor() - 20 and ball.distance(paddle1) < 70:
+        score1.update_score()  # Update score of opposing player
+    if ball.xcor() < -380:
+        ball.reset()
+        score2.update_score()
+    # Detect collision with Paddles
+    if (
+        ball.xcor() > 340
+        and ball.distance(paddle1) < 50
+        or ball.xcor() < -340
+        and ball.distance(paddle2) < 50
+    ):
         ball.hit()
-    if ball.xcor() < paddle2.xcor() + 20 and ball.distance(paddle2) < 70:
-        ball.hit()
+        ball.speed_up()
 
 screen.exitonclick()

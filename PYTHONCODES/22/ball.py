@@ -22,3 +22,7 @@ class Ball(Turtle):
 
     def reset(self):
         self.goto(0, 0)
+
+    def speed_up(self):
+        self.x_move += 2
+        self.y_move += 2
