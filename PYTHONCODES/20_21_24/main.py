@@ -14,7 +14,6 @@ def gamestart():
 
 food = FOOD()
 score = ScoreBoard()
-high_score = ScoreBoard(position=(180, 260), score="High Score")
 snake = Snake()
 screen = Screen()
 screen.setup(width=600, height=600)
@@ -41,9 +40,8 @@ while True:
     if game_on:
         snake.reset()
         pen.clear()
-        score.score = 0
+        score.reset()
         score.update_display()
-        high_score.update_display()
 
     while game_on:
 
@@ -61,18 +59,11 @@ while True:
             or snake.head.ycor() > 280
             or snake.head.ycor() < -280
         ):
-            high_score.score = (
-                score.score if score.score > high_score.score else high_score.score
-            )
             game_on = False
             score.game_over()
 
         for segment in snake.segments[1:]:
             if snake.head.distance(segment) < 10:
-                high_score.score = (
-                    score.score if score.score > high_score.score else high_score.score
-                )
-                high_score.update_score()
                 game_on = False
                 score.game_over()
 
