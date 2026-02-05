@@ -13,11 +13,24 @@ class Snake:
     def __init__(self):
         self.starting_positions = [(0, 0), (-20, 0), (-40, 0)]
         self.segments = []
+        self.create_snake_whole()
+        self.head = self.segments[0]
 
+    def create_snake_whole(self):
         for position in self.starting_positions:
             self.create_snake(position)
 
+    def reset(self):
+        for snake in self.segments:
+            snake.hideturtle()
+        for segment in range(len(self.segments) - 1, 0, -1):
+            new_x = self.segments[segment - 1].xcor()
+            new_y = self.segments[segment - 1].ycor()
+            print(segment, "= ", new_x, " ", new_y)
+        self.segments.clear()
+        self.create_snake_whole()
         self.head = self.segments[0]
+        self.head.setheading(RIGHT)
 
     def create_snake(self, position):
         newsegment = Turtle()
