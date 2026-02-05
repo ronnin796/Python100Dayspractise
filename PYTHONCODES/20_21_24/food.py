@@ -14,6 +14,7 @@ class FOOD(Turtle):
         self.shape("circle")
         self.shapesize(stretch_len=0.5, stretch_wid=0.5)
         self.color("blue")
+        self.goto(self.x_pos, self.y_pos)
 
     def update_food_pos(self):
         self.x_pos = rm.randint(0, HEIGHT)

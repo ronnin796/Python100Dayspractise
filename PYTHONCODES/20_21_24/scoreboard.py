@@ -1,4 +1,8 @@
 from turtle import Turtle
+from pathlib import Path
+
+BASE_DIR = Path(__file__).parent
+high_score_file = BASE_DIR / "highscore.txt"
 
 
 class ScoreBoard(Turtle):
@@ -11,7 +15,14 @@ class ScoreBoard(Turtle):
         self.score = 0
         self.highscore = 0
         # Write the score
+        self.read_high_score()
         self.update_display()
+
+    def read_high_score(self):
+        with open(high_score_file, mode="r") as file:
+            score = int(file.read())
+            self.highscore = score
+            file.close()
 
     def update_display(self):
         self.clear()
@@ -25,6 +36,9 @@ class ScoreBoard(Turtle):
     def reset(self):
         if self.score > self.highscore:
             self.highscore = self.score
+            with open(high_score_file, mode="w") as file:
+                file.write(str(self.highscore))
+
         self.score = 0
 
     def game_over(self):

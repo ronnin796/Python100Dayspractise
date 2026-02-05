@@ -4,7 +4,14 @@ from snake import Snake
 from food import FOOD
 from scoreboard import ScoreBoard
 
+screen = Screen()
+screen.setup(width=600, height=600)
+screen.bgcolor("black")
+screen.title("My snake game")
+screen.tracer(0)
+
 game_on = False
+snake = Snake()
 
 
 def gamestart():
@@ -14,13 +21,8 @@ def gamestart():
 
 food = FOOD()
 score = ScoreBoard()
-snake = Snake()
-screen = Screen()
-screen.setup(width=600, height=600)
-screen.bgcolor("black")
-screen.title("My snake game")
-screen.listen()
 
+screen.listen()
 screen.onkey(snake.up, "w")
 screen.onkey(snake.down, "s")
 screen.onkey(snake.left, "a")
@@ -59,11 +61,13 @@ while True:
             or snake.head.ycor() > 280
             or snake.head.ycor() < -280
         ):
+            food.new_food()
             game_on = False
             score.game_over()
 
         for segment in snake.segments[1:]:
             if snake.head.distance(segment) < 10:
+                food.new_food()
                 game_on = False
                 score.game_over()
 
