@@ -38,10 +38,16 @@ while game_on:
         prompt="Write the state's name: ",
     )
     answer = answer.title()
+    if answer.lower() == "exit":
+        missed_states = [state for state in states if state not in correct_guesses]
+        missed_states = pd.DataFrame(missed_states)
+        missed_states.to_csv(BASE_DIR / "./missed_states.csv")
     if answer in states and answer not in correct_guesses:
-        x_cor = int(state_data["x"][state_data.state == answer].iloc[0])
-        y_cor = int(state_data["y"][state_data.state == answer].iloc[0])
-
+        # x_cor = int(state_data["x"][state_data.state == answer].iloc[0])
+        # y_cor = int(state_data["y"][state_data.state == answer].iloc[0])
+        temp_state_data = state_data[state_data.state == answer]
+        x_cor = temp_state_data.x.item()
+        y_cor = temp_state_data.y.item()
         writer.goto(x_cor, y_cor)
         writer.write(answer, align="center", font=("Arial", 16, "normal"))
         numbers_guessed += 1
