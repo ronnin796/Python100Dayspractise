@@ -1,14 +1,9 @@
-import csv
+import pandas as pd
 from pathlib import Path
 
-temperatures = []
-weather_data = []
 BASE_DIR = Path(__file__).parent
-with open(BASE_DIR / "./weather_data.csv", mode="r") as file:
-    data = csv.reader(file)
-    weather_data = [row for row in data]
-    for row in weather_data[1:]:
-        temperatures.append(row[1])
-    file.close()
+
+weather_data = pd.read_csv(BASE_DIR / "./weather_data.csv")
+temperatures = weather_data["temp"]
 print(temperatures)
 print(weather_data)
