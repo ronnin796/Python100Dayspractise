@@ -15,9 +15,21 @@ print(
     max_temperature,
 )
 # Data in Column
-print(weather_data.day)
+# print(weather_data.day)
 # Data in row
 # print(weather_data[weather_data.temp == max_temperature])
 monday_row = weather_data[weather_data.day == "Monday"]
-monday_temperature = monday_row.temp * 9 / 5
+print(monday_row)
+monday_temperature = float(monday_row.temp * 9 / 5 + 32)  # converting int Farenheit
 print(monday_temperature)
+
+# Dataframe from scratch
+anime_data = {
+    "Anime": ["Naruto", "Stiens Gate", "Frieren", "Match Comes in Like a Lion"],
+    "Genre": ["Shounen", "Mystery", "Fantasy", "Slice of Life"],
+}
+anime_dataframe = pd.DataFrame(anime_data)
+print(anime_dataframe)
+anime_dataframe.to_csv(
+    BASE_DIR / "./anime_data.csv"
+)  # Converting the dataframe to a csv file
