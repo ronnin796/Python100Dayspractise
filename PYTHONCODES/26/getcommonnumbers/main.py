@@ -18,3 +18,5 @@ common_numbers = [
     if num in file1_numbers and num in file2_numbers
 ]
 print(common_numbers)
+file1.close()
+file2.close()
