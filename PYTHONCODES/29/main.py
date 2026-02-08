@@ -15,6 +15,11 @@ screen.title("Password Manager")
 screen.config(padx=20, pady=20, bg="White")
 
 
+# ---------------------------- SEARCH ------------------------------- #
+def search_password():
+    pass
+
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = list("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -79,10 +84,14 @@ website_label = tk.Label(
 )
 website_label.grid(row=2, column=0, pady=5, sticky="e")
 
-website_input = tk.Entry(screen, font=ENTRY_FONT, width=36)
-website_input.grid(row=2, column=1, pady=5)
+website_input = tk.Entry(screen, font=ENTRY_FONT, width=45)
+website_input.grid(row=2, column=1, columnspan=2, pady=5, sticky="w")
 website_input.focus()
-
+# Search Button
+search_button = tk.Button(
+    screen, text="Search", font=BUTTON_FONT, command=search_password
+)
+search_button.grid(row=2, column=2, sticky="e")
 # Email / Username
 email_label = tk.Label(
     screen,
@@ -93,8 +102,8 @@ email_label = tk.Label(
 )
 email_label.grid(row=3, column=0, pady=5, sticky="e")
 
-email_input = tk.Entry(screen, font=ENTRY_FONT, width=36)
-email_input.grid(row=3, column=1, pady=5)
+email_input = tk.Entry(screen, font=ENTRY_FONT, width=55)
+email_input.grid(row=3, column=1, columnspan=2, pady=5)
 
 # Password section
 password_label = tk.Label(
@@ -106,11 +115,8 @@ password_label = tk.Label(
 )
 password_label.grid(row=4, column=0, pady=5, sticky="e")
 
-password_input = tk.Entry(screen, font=ENTRY_FONT, width=36)
-password_input.grid(
-    row=4,
-    column=1,
-)
+password_input = tk.Entry(screen, font=ENTRY_FONT, width=43)
+password_input.grid(row=4, column=1, sticky="w")
 
 generate_button = tk.Button(
     screen, text="Generate", font=BUTTON_FONT, command=generate_password
@@ -123,8 +129,8 @@ add_button = tk.Button(
     text="Add",
     font=BUTTON_FONT,
     command=save_password,
-    width=35,
+    width=53,
 )
-add_button.grid(row=5, column=1, pady=10)
+add_button.grid(row=5, column=1, pady=10, columnspan=2)
 
 screen.mainloop()
