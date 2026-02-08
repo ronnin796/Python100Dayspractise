@@ -2,6 +2,8 @@ from tkinter import font
 import tkinter as tk
 from pathlib import Path
 import time
+from random import shuffle, randint, choice
+import pyperclip
 
 FONT = ("Arial", 20, "bold")
 BASE_DIR = Path(__file__).parent
@@ -12,19 +14,85 @@ screen.config(padx=20, pady=20, bg="White")
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
-    pass
+    letters = [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+    ]
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    symbols = ["!", "#", "$", "%", "&", "(", ")", "*", "+"]
+
+    password_list = [choice(letters) for _ in range(randint(8, 10))]
+    password_list += [choice(symbols) for _ in range(randint(2, 4))]
+    password_list += [choice(numbers) for _ in range(randint(2, 4))]
+
+    shuffle(password_list)
+
+    password = "".join(password_list)
+    pyperclip.copy(password)
+    password_input.delete(0, tk.END)
+    password_input.insert(0, password)
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_password():
+    website = website_input.get()
+    email = email_input.get()
+    password = password_input.get()
     with open(BASE_DIR / "./data.txt", mode="a") as file:
-        website = website_input.get()
-        email = email_input.get()
-        password = password_input.get()
         password_data = f"{website} | {email} | {password} \n"
         file.write(password_data)
         file.close()
-        reset()
+    reset()
 
 
 def reset():
