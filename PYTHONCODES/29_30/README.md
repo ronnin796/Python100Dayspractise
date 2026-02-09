@@ -1,4 +1,4 @@
-# Frieren the Password Keeper 🔐
+# Frieren the Password Keeper 
 
 A simple **desktop password manager** built with **Python + Tkinter**.  
 It lets you generate strong passwords, save them locally, and quickly search for saved credentials.
@@ -19,7 +19,7 @@ It lets you generate strong passwords, save them locally, and quickly search for
 
 ![App Demo](frieren.gif)
 
-> `frieren.gif` is a short screen recording of the app in use  
+> `Frieren the Password Keeper` is a short screen recording of the app in use  
 > (generate password → save → search)
 
 ---
