@@ -36,7 +36,7 @@ def search_password(website_key):
             password = website_entry["password"]
             email = website_entry["email"]
             messagebox.showinfo(
-                title="Website Details",
+                title=website_key,
                 message=f"Email = {email} , Password = {password}",
             )
 
