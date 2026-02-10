@@ -2,7 +2,7 @@ name: Run Motivation Script Daily
 
 on:
   schedule:
-    - cron: '07 19 * * *'   
+    - cron: '15 3 * * *'   
   workflow_dispatch:       # allows manual trigger
 
 jobs:
