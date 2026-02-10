@@ -18,11 +18,15 @@ screen.title("Flash Card App")
 screen.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 
 # ---------------------------- Data ------------------------------- #
-data = pd.read_csv(BASE_DIR / "data/french_words.csv")
+words_to_learn_file = BASE_DIR / "data/words_to_learn.csv"
+try:
+    data = pd.read_csv(words_to_learn_file)
+except FileNotFoundError:
+    data = pd.read_csv(BASE_DIR / "data/french_words.csv")
 to_learn = data.to_dict(orient="records")
 current_card = random.choice(to_learn)
-# print(to_learn)
-
+# print(data)
+print(to_learn)
 # ---------------------------- Image Assets ------------------------------- #
 front_image_path = BASE_DIR / "./images/card_front.png"
 back_image_path = BASE_DIR / "./images/card_back.png"
@@ -46,6 +50,7 @@ def flip_card():
 # ---------------------------- Functions ------------------------------- #
 def next_card():
     global current_card, canvas_image
+    screen.after_cancel(countdown)
     canvas_image = front_image
     canvas.itemconfig(canvas_item, image=canvas_image)
     current_card = random.choice(to_learn)
@@ -54,6 +59,15 @@ def next_card():
     countdown()
 
 
+# ---------------------------- Save Progress ------------------------------- #
+def is_known():
+    to_learn.remove(current_card)
+    data = pd.DataFrame(to_learn)
+    data.to_csv(words_to_learn_file, index=False)
+    next_card()
+
+
+countdown()
 # ---------------------------- UI SETUP ------------------------------- #
 canvas = tk.Canvas(
     width=800, height=522, bg="White", highlightthickness=0, background=BACKGROUND_COLOR
@@ -87,10 +101,9 @@ yes_button = tk.Button(
     screen,
     image=yes_button_image,
     highlightthickness=0,
-    command=next_card,
+    command=is_known,
 )
 yes_button.grid(row=1, column=1)
 
 
-countdown()
 screen.mainloop()
