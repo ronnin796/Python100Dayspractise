@@ -1,9 +1,11 @@
 [project]
-name = "motivation"
+name = "pythoncodes"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "pandas>=3.0.0",
+    "pyperclip>=1.11.0",
     "python-decouple>=3.8",
 ]
