@@ -8,7 +8,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 MY_EMAIL = config("EMAIL_USER")
 MY_PASSWORD = config("EMAIL_PASSWORD")
-RECEIVER_EMAIL = config("receiver_email")
+RECEIVER_EMAIL = config("RECEIVER_EMAIL")
 
 BASE_DIR = Path(__file__).parent
 quotes_file = BASE_DIR / "quotes.txt"
