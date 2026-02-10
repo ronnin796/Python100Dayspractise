@@ -2,7 +2,7 @@ name: Run Motivation Script Daily
 
 on:
   schedule:
-    - cron: '11 18 * * *'   # 9:00 AM Nepal Time (UTC+5:45)
+    - cron: '16 18 * * *'   # 9:00 AM Nepal Time (UTC+5:45)
   workflow_dispatch:       # allows manual trigger
 
 jobs:
