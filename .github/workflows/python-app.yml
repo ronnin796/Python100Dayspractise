@@ -1,0 +1,29 @@
+name: Run Motivation Script Daily
+
+on:
+  schedule:
+    - cron: '11 18 * * *'   # 9:00 AM Nepal Time (UTC+5:45)
+  workflow_dispatch:       # allows manual trigger
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies from pyproject.toml
+        run: pip install PYTHONCODES
+
+      - name: Run motivation script
+        env:
+          MY_SECRET: ${{ secrets.EMAIL_DETAILS }}
+        run: python PYTHONCODES/32/motivation/main.py
