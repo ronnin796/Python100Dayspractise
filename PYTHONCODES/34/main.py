@@ -10,9 +10,6 @@ question_bank = [
 
 quiz = QuizBrain(question_bank)
 
-for question in question_bank:
-    print(question.text)
-
 BACKGROUND_COLOR = "#B1DDC6"
 
 import tkinter as tk
@@ -34,12 +31,15 @@ screen.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 
 # ---------------------------- Data ------------------------------- #
 def check_answer(answer):
-    if quiz.check_answer(answer):
-        canvas.config(bg="green")
-        canvas.itemconfig(score_text, text=f"Score: {quiz.score}")
+    if quiz.still_has_questions():
+        if quiz.check_answer(answer):
+            canvas.config(bg="green")
+            canvas.itemconfig(score_text, text=f"Score: {quiz.score}")
+        else:
+            canvas.config(bg="red")
+        screen.after(1000, next_card)
     else:
-        canvas.config(bg="red")
-    screen.after(1000, next_card)
+        canvas.itemconfig(question_text, text="You've reached the end of the quiz.")
 
 
 def next_card():
