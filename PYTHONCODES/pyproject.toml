@@ -8,4 +8,5 @@ dependencies = [
     "pandas>=3.0.0",
     "pyperclip>=1.11.0",
     "python-decouple>=3.8",
+    "requests>=2.32.5",
 ]
