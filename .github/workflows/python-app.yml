@@ -33,4 +33,4 @@ jobs:
         run: python -m PYTHONCODES.32.motivation.main
 
       - name: Run Rain Alert Script
-        run: python -m PYTHONCODES.35.rain_alert
+        run: python -m PYTHONCODES.35.rainalert
