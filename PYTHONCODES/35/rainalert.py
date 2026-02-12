@@ -11,7 +11,7 @@ APP_ID = config("WEATHER_API_KEY")
 PARAMS = {
     "lat": f"{lat}",
     "lon": f"{lon}",
-    "appid": "f22f75c2f1b17d0019f3c56cc3e50cc9",
+    "appid": APP_ID,
     "cnt": "4",
 }
 try:
