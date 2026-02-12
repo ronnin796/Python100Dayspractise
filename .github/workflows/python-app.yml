@@ -28,4 +28,4 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-        run: python PYTHONCODES/32/motivation/main.py
+        run: python -m PYTHONCODES.32.motivation.main
