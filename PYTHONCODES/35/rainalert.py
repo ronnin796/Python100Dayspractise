@@ -2,8 +2,10 @@ import requests
 from PYTHONCODES.sendmail import send_mail
 from decouple import config
 
-lat = 27.753129
-lon = 85.330416
+lat = -21.829473 #  27.753129
+lon = 134.826004 #  85.330416
+
+
 APP_ID = config("WEATHER_API_KEY")
 
 PARAMS = {
