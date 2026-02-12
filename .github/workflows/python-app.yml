@@ -1,13 +1,19 @@
-name: Run Motivation Script Daily
+name: Run Daily Scripts
 
 on:
   schedule:
-    - cron: '15 3 * * *'   
-  workflow_dispatch:       # allows manual trigger
+    # 6:00 AM Nepal time = 00:15 UTC
+    - cron: '15 0 * * *'
+  workflow_dispatch:  # allows manual trigger
 
 jobs:
-  run-script:
+  run-scripts:
     runs-on: ubuntu-latest
+    env:  # job-level env, applies to all steps
+      EMAIL_USER: ${{ secrets.EMAIL_USER }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+      WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -20,12 +26,11 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      - name: Install dependencies from pyproject.toml
-        run: pip install ./PYTHONCODES
+      - name: Install dependencies
+        run: pip install ./PYTHONCODES  
 
-      - name: Run motivation script
-        env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+      - name: Run Motivation Script
         run: python -m PYTHONCODES.32.motivation.main
+
+      - name: Run Rain Alert Script
+        run: python -m PYTHONCODES.35.rain_alert
