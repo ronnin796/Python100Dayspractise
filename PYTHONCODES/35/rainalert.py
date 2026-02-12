@@ -22,7 +22,7 @@ except Exception as err:
     print(f"An error occurred: {err}")
 
 weather_data = response.json()
-weather_forecast = weather_data["list"]  # Get the next 12 hours of forecast
+weather_forecast = weather_data["list"]
 for weather in weather_forecast:
     if weather["weather"][0]["id"] < 700:  # Check for rain conditions
         send_mail(
