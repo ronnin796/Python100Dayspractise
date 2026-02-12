@@ -1,7 +1,7 @@
 import random
 from pathlib import Path
 
-from sendmail import send_mail
+from PYTHONCODES.sendmail import send_mail
 
 
 def load_random_quote(quotes_file_path: Path) -> str:
