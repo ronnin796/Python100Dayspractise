@@ -38,44 +38,34 @@ headers = {"X-USER-TOKEN": PIXELA_TOKEN}
 #     print(f"An error occurred: {err}")
 # print(response.text)
 POST_PIXEL_ENDPOINT = f"{pixela_endpoint}/{PIXELA_USERNAME}/graphs/graph1"
-from datetime import datetime
-
 today = datetime.now().strftime("%Y%m%d")
 pixel_data = {
-    "date": today,
-    "quantity": "5",
-}
-try:
-    response = requests.post(url=POST_PIXEL_ENDPOINT, json=pixel_data, headers=headers)
-    response.raise_for_status()
-except requests.exceptions.HTTPError as err:
-    print(f"HTTP error occurred: {err}")
-except Exception as err:
-    print(f"An error occurred: {err}")
-print(response.text)
 
-# Update (PUT) the pixel for today
-UPDATE_PIXEL_ENDPOINT = f"{pixela_endpoint}/{PIXELA_USERNAME}/graphs/graph1/{today}"
-update_data = {
-    "quantity": "7",
-}
-try:
-    response = requests.put(
-        url=UPDATE_PIXEL_ENDPOINT, json=update_data, headers=headers
-    )
-    response.raise_for_status()
-except requests.exceptions.HTTPError as err:
-    print(f"HTTP error occurred (PUT): {err}")
-except Exception as err:
-    print(f"An error occurred (PUT): {err}")
-print("PUT:", response.text)
+from datetime import datetime
 
-# Delete the pixel for today
-try:
-    response = requests.delete(url=UPDATE_PIXEL_ENDPOINT, headers=headers)
-    response.raise_for_status()
-except requests.exceptions.HTTPError as err:
-    print(f"HTTP error occurred (DELETE): {err}")
-except Exception as err:
-    print(f"An error occurred (DELETE): {err}")
-print("DELETE:", response.text)
+while True:
+    user_input = input("Enter what you did today (number of commits or 'exit' to quit): ").strip()
+    if user_input.lower() == 'exit':
+        print("Exiting. Goodbye!")
+        break
+    if not user_input.isdigit():
+        print("Please enter a valid number or 'exit'.")
+        continue
+    date_input = input("Enter date (YYYYMMDD) or press Enter for today: ").strip()
+    if date_input == '':
+        date_str = datetime.now().strftime("%Y%m%d")
+    else:
+        date_str = date_input
+    pixel_data = {
+        "date": date_str,
+        "quantity": user_input,
+    }
+    try:
+        response = requests.post(url=POST_PIXEL_ENDPOINT, json=pixel_data, headers=headers)
+        response.raise_for_status()
+        print(f"Pixel added for {date_str}: {user_input}")
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+        print(response.text)
+    except Exception as err:
+        print(f"An error occurred: {err}")
