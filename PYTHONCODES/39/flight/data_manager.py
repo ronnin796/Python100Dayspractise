@@ -1,36 +1,48 @@
+import logging
+from typing import List, Dict, Optional
 import requests
 from decouple import config
 
-SHEETS_URL = "https://api.sheety.co/d8e303ec42b1dc12b9a759f057939414/flight/sheet1"
-AUTHORIZATION_TOKEN = config("FLIGHTS")
-print(AUTHORIZATION_TOKEN)
-HEADERS = {
-    "Authorization": AUTHORIZATION_TOKEN,
-}
 
+class SHEETY:
+    """Handles interactions with the Sheety API for city and IATA code management."""
 
-class DataManager:
-    def __init__(
-        self,
-    ): ...  # This class is responsible for talking to the Google Sheet.
-    def get_destination_data(self):
-        response = requests.get(url=SHEETS_URL, headers=HEADERS)
-        return response.json()
+    def __init__(self) -> None:
+        self.SHEETS_URL = config("SHEETY_FLIGHT_URL")
+        self.AUTHORIZATION_TOKEN = config("FLIGHTS")
+        self.HEADERS = {"Authorization": self.AUTHORIZATION_TOKEN}
 
-    def fill_iata_codes(self, city, iata_code):
-        new_data = {
-            "sheet1": {
-                "city": city,
-                "iataCode": iata_code,
-            }
-        }
-        response = requests.put(
-            url=f"{SHEETS_URL}/{city}", json=new_data, headers=HEADERS
-        )
-        print(response.text)
+    def get_cities(self) -> List[Dict]:
+        """Fetches the list of cities from the Sheety API."""
+        try:
+            response = requests.get(url=self.SHEETS_URL, headers=self.HEADERS)
+            response.raise_for_status()
+            return response.json().get("sheet1", [])
+        except requests.RequestException as e:
+            logging.error(f"Failed to fetch cities: {e}")
+            return []
 
+    def update_iata_code(self, city_id: int, iata_code: str) -> None:
+        """Updates the IATA code for a specific city in the Sheety API."""
+        update_url = f"{self.SHEETS_URL}/{city_id}"
+        body = {"sheet1": {"iataCode": iata_code}}
+        try:
+            response = requests.put(url=update_url, json=body, headers=self.HEADERS)
+            response.raise_for_status()
+            logging.info(f"Updated city ID {city_id} with IATA code {iata_code}.")
+        except requests.RequestException as e:
+            logging.error(f"Failed to update IATA code for city ID {city_id}: {e}")
 
-data_manager = DataManager()
-cities_data = data_manager.get_destination_data()["sheet1"]
-cities = [data["city"] for data in cities_data]
-print(cities)
+    def update_all_iata_codes(self, cities: List[Dict], amadeus: "AMADEUS") -> None:
+        """Updates IATA codes for all cities using the Amadeus API."""
+        for city in cities:
+            city_name = city.get("city")
+            city_id = city.get("id")
+            if not city_name or not city_id:
+                logging.warning(f"Missing city name or ID in city data: {city}")
+                continue
+            iata_code = amadeus.get_iata_code(city_name)
+            if iata_code:
+                self.update_iata_code(city_id, iata_code)
+            else:
+                logging.warning(f"No IATA code found for city: {city_name}")
