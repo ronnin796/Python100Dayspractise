@@ -2,6 +2,7 @@ import logging
 from typing import List, Dict, Optional
 import requests
 from decouple import config
+from flight_data import flightData
 
 
 class SHEETY:
@@ -33,7 +34,7 @@ class SHEETY:
         except requests.RequestException as e:
             logging.error(f"Failed to update IATA code for city ID {city_id}: {e}")
 
-    def update_all_iata_codes(self, cities: List[Dict], amadeus: "AMADEUS") -> None:
+    def update_all_iata_codes(self, cities: List[Dict], amadeus: flightData) -> None:
         """Updates IATA codes for all cities using the Amadeus API."""
         for city in cities:
             city_name = city.get("city")
@@ -46,3 +47,13 @@ class SHEETY:
                 self.update_iata_code(city_id, iata_code)
             else:
                 logging.warning(f"No IATA code found for city: {city_name}")
+
+    def update_all_cities_iata_codes(self) -> None:
+        logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+        amadeus = flightData()
+        cities = self.get_cities()
+        if not cities:
+            logging.error("No cities found to update.")
+            return
+        logging.info(f"Fetched {len(cities)} cities from Sheety.")
+        self.update_all_iata_codes(cities, amadeus)
