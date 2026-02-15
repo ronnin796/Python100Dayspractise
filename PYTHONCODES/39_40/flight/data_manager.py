@@ -12,6 +12,7 @@ class SHEETY:
         self.SHEETS_URL = config("SHEETY_FLIGHT_URL")
         self.AUTHORIZATION_TOKEN = config("FLIGHTS")
         self.HEADERS = {"Authorization": self.AUTHORIZATION_TOKEN}
+        self.SHEETY_USERS = config("SHEETY_USERS_URL")
 
     def get_cities(self) -> List[Dict]:
         """Fetches the list of cities from the Sheety API."""
@@ -21,6 +22,16 @@ class SHEETY:
             return response.json().get("sheet1", [])
         except requests.RequestException as e:
             logging.error(f"Failed to fetch cities: {e}")
+            return []
+
+    def get_users(self) -> List[Dict]:
+        """Fetches the list of users from the Sheety API."""
+        try:
+            response = requests.get(url=self.SHEETY_USERS, headers=self.HEADERS)
+            response.raise_for_status()
+            return response.json().get("users", [])
+        except requests.RequestException as e:
+            logging.error(f"Failed to fetch users: {e}")
             return []
 
     def update_iata_code(self, city_id: int, iata_code: str) -> None:

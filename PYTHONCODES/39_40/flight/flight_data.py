@@ -6,6 +6,9 @@ from amadeus_connection import AMADEUS
 
 
 class flightData(AMADEUS):
+    def __init__(self) -> None:
+        super().__init__()
+        # self.
 
     def get_iata_code(self, city: str, country_code: str = "NP") -> Optional[str]:
         """Fetches the IATA code for a given city name and country code."""
