@@ -6,7 +6,7 @@ from data_manager import SHEETY
 
 fs = flightSearch()
 sheety = SHEETY()
-cities_to_visit = sheety.get_cities()
-print(cities_to_visit)
+# cities_to_visit = sheety.get_cities()
+# print(cities_to_visit)
 response = sheety.get_users()
 print(response)
