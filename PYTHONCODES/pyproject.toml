@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "djlint>=1.36.4",
     "pandas>=3.0.0",
     "pyperclip>=1.11.0",
     "python-decouple>=3.8",
