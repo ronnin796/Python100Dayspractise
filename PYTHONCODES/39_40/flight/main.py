@@ -12,6 +12,7 @@ cities_to_visit = sheety.get_cities()
 
 
 def main() -> None:
+    users = sheety.get_users()
     for city in cities_to_visit:
         city_name = city.get("city")
         iata_code = city.get("iataCode")
@@ -29,8 +30,14 @@ def main() -> None:
                 last_ticketing_date = offer.get("lastTicketingDate")
                 flight_id = offer.get("id")
         if best_price <= cutoff:
+            for user in users:
+                notification.send_email(
+                    receiver=user.get("email"),
+                    subject=f"Low price alert for {city_name}!",
+                    body=f"Flight from LON to {city_name} ({iata_code}): Cheapest price: {best_price}, Last ticketing date: {last_ticketing_date}, Flight ID: {flight_id}",
+                )
             message = f"Flight from LON to {city_name} ({iata_code}): Cheapest price: {best_price}, Last ticketing date: {last_ticketing_date}, Flight ID: {flight_id}"
-            notification.send_message(message)
+            notification.send_sms(message)
 
 
 if __name__ == "__main__":
