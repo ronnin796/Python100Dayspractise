@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
+import requests
 
-with open("website.html") as file:
-    contents = file.read()
-soup = BeautifulSoup(contents, "html.parser")
-
-print(soup.prettify())
+response = requests.get("https://news.ycombinator.com/")
+soup = BeautifulSoup(response.text, "lxml")
+# print(soup.prettify())
+titles = soup.find_all(name="span", class_="titleline")
+for title in titles:
+    print(title.getText(), " link :", title.find("a")["href"])
