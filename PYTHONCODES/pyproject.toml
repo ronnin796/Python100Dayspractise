@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "beautifulsoup4>=4.14.3",
     "djlint>=1.36.4",
     "pandas>=3.0.0",
     "pyperclip>=1.11.0",
