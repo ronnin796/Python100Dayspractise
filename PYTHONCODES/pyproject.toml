@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.14.3",
     "djlint>=1.36.4",
+    "lxml>=6.0.2",
     "pandas>=3.0.0",
     "pyperclip>=1.11.0",
     "python-decouple>=3.8",
