@@ -35,7 +35,7 @@ def buy_upgrades():
 
 
 start_time = time.time()
-timeout = start_time + 60 * 5
+timeout = start_time + 60 * 20
 
 while time.time() < timeout:
     cookie.click()
