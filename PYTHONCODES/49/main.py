@@ -4,7 +4,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    StaleElementReferenceException,
+    TimeoutException,
+)
 
 ACCOUNT_EMAIL = "noctis@gmail.com"
 ACCOUNT_PASSWORD = "nocits1234"
@@ -37,60 +41,72 @@ password_field.send_keys(ACCOUNT_PASSWORD)
 submit_button.click()
 
 
-from selenium.common.exceptions import (
-    ElementClickInterceptedException,
-    StaleElementReferenceException,
-    TimeoutException,
-)
-
-
 def book_tuesday():
-    # Target ONLY buttons that don't say "Booked" yet
-    tuesday_buttons_xpath = (
-        "//h2[contains(text(),'Tuesday')]"
-        "/following-sibling::div"
-        "//button[contains(@class,'ClassCard_available__') and not(contains(., 'Booked'))]"
-    )
-
-    while True:
-        try:
-            # Re-fetch elements every time the loop restarts to avoid staleness
-            wait.until(
-                EC.presence_of_element_located((By.XPATH, tuesday_buttons_xpath))
+    try:
+        tuesday_section = wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//h2[contains(text(),'Tue')]/parent::div")
             )
-            buttons = driver.find_elements(By.XPATH, tuesday_buttons_xpath)
+        )
 
-            if not buttons:
-                print("No more available Tuesday classes.")
-                break
+        buttons = tuesday_section.find_elements(
+            By.XPATH,
+            ".//button[contains(@class,'ClassCard_bookButton')]",
+        )
 
-            # Click only the FIRST available button found
-            button = buttons[0]
+        if not buttons:
+            print("No Tuesday classes found.")
+            return
 
-            driver.execute_script(
-                "arguments[0].scrollIntoView({block:'center'});", button
-            )
-
+        for button in buttons:
             try:
-                # Attempt a clean click
-                wait.until(EC.element_to_be_clickable(button))
-                button.click()
-            except (ElementClickInterceptedException, StaleElementReferenceException):
-                # Fallback to JS click if something is overlapping
+                driver.execute_script(
+                    "arguments[0].scrollIntoView({block:'center'});", button
+                )
+
+                text = button.text.strip()
+
+                if "Booked" in text:
+                    print("Already booked.")
+                    continue
+
+                elif "Join Waitlist" in text:
+                    wait.until(EC.element_to_be_clickable(button))
+                    button.click()
+                    print("Joined waitlist.")
+
+                    wait.until(
+                        lambda d: "Waitlisted" in button.text or "Leave" in button.text
+                    )
+                    return
+
+                elif "Book Class" in text:
+                    wait.until(EC.element_to_be_clickable(button))
+                    button.click()
+                    print("Booked class.")
+
+                    wait.until(lambda d: "Booked" in button.text)
+                    return
+                elif "Waitlisted" in text:
+                    print("Waitlisted")
+                    continue
+
+                else:
+                    print(f"Unknown button state: {text}")
+
+            except ElementClickInterceptedException:
                 driver.execute_script("arguments[0].click();", button)
+                print("Clicked using JS.")
+                return
 
-            print("Booked a class. Refreshing list...")
+            except StaleElementReferenceException:
+                print("Element went stale, retrying...")
+                return book_tuesday()
 
-            # CRITICAL: Wait for the DOM to update or for the button to change state
-            # This prevents the loop from grabbing the same button again
-            wait.until(EC.staleness_of(button))
+        print("No actionable Tuesday classes found.")
 
-        except TimeoutException:
-            print("Finished booking or timed out.")
-            break
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-            break
+    except TimeoutException:
+        print("Tuesday section not found.")
 
 
 book_tuesday()
