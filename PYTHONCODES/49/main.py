@@ -48,11 +48,15 @@ def book_tuesday():
                 (By.XPATH, "//h2[contains(text(),'Tue')]/parent::div")
             )
         )
+        date = tuesday_section.find_element(
+            By.XPATH, ".//h2[contains(@class,'Schedule_dayTitle')]"
+        )
 
         buttons = tuesday_section.find_elements(
             By.XPATH,
             ".//button[contains(@class,'ClassCard_bookButton')]",
         )
+        count = 0
 
         if not buttons:
             print("No Tuesday classes found.")
@@ -63,11 +67,15 @@ def book_tuesday():
                 driver.execute_script(
                     "arguments[0].scrollIntoView({block:'center'});", button
                 )
+                class_names = tuesday_section.find_elements(
+                    By.XPATH,
+                    ".//h3[contains(@id,'class-name')]",
+                )
 
                 text = button.text.strip()
 
                 if "Booked" in text:
-                    print("Already booked.")
+                    print(f"{class_names[count].text} at {date.text}")
                     continue
 
                 elif "Join Waitlist" in text:
@@ -102,8 +110,7 @@ def book_tuesday():
             except StaleElementReferenceException:
                 print("Element went stale, retrying...")
                 return book_tuesday()
-
-        print("No actionable Tuesday classes found.")
+            count += 1
 
     except TimeoutException:
         print("Tuesday section not found.")
