@@ -41,7 +41,24 @@ password_field.send_keys(ACCOUNT_PASSWORD)
 submit_button.click()
 
 
+def summary(
+    booking_count=0, booked_waitlisted=0, waitlists_joined=0, total_classes=0, date=""
+):
+    print(
+        f"""--- BOOKING SUMMARY ---
+Classes booked: {booking_count}
+Waitlists joined: {waitlists_joined}
+Already booked/waitlisted: {booked_waitlisted}
+Total {date} classes processed: {total_classes}
+"""
+    )
+
+
 def book_tuesday():
+    booking_count = 0
+    booked_waitlisted = 0
+    waitlists_joined = 0
+
     try:
         tuesday_section = wait.until(
             EC.presence_of_element_located(
@@ -75,14 +92,15 @@ def book_tuesday():
                 text = button.text.strip()
 
                 if "Booked" in text:
-                    print(f"{class_names[count].text} at {date.text}")
+                    print(f"Already Booked {class_names[count].text} at {date.text}")
+                    booked_waitlisted += 1
                     continue
 
                 elif "Join Waitlist" in text:
                     wait.until(EC.element_to_be_clickable(button))
                     button.click()
                     print("Joined waitlist.")
-
+                    waitlists_joined += 1
                     wait.until(
                         lambda d: "Waitlisted" in button.text or "Leave" in button.text
                     )
@@ -92,11 +110,13 @@ def book_tuesday():
                     wait.until(EC.element_to_be_clickable(button))
                     button.click()
                     print("Booked class.")
+                    booking_count += 1
 
                     wait.until(lambda d: "Booked" in button.text)
                     return
                 elif "Waitlisted" in text:
                     print("Waitlisted")
+                    booked_waitlisted += 1
                     continue
 
                 else:
@@ -114,6 +134,13 @@ def book_tuesday():
 
     except TimeoutException:
         print("Tuesday section not found.")
+    finally:
+        summary(
+            booked_waitlisted,
+            waitlists_joined,
+            total_classes=len(buttons),
+            date=date.text,
+        )
 
 
 book_tuesday()
