@@ -5,4 +5,4 @@ if __name__ == "__main__":
     bot.login()
     bot.book_day("Tue")
     bot.book_day("Thu")
-    bot.verify_bookings(expected_bookings=2)
+    bot.verify_bookings()
