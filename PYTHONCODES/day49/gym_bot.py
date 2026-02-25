@@ -29,19 +29,25 @@ wait = WebDriverWait(driver, 10)
 
 # ------------------ LOGIN ------------------
 
-login_button = wait.until(EC.element_to_be_clickable((By.ID, "login-button")))
-login_button.click()
 
-email_field = wait.until(EC.presence_of_element_located((By.ID, "email-input")))
-password_field = wait.until(EC.presence_of_element_located((By.ID, "password-input")))
-submit_button = wait.until(EC.element_to_be_clickable((By.ID, "submit-button")))
+def login(driver, wait, email, password):
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "login-button")))
+    login_button.click()
 
-email_field.send_keys(ACCOUNT_EMAIL)
-password_field.send_keys(ACCOUNT_PASSWORD)
-submit_button.click()
+    email_field = wait.until(EC.presence_of_element_located((By.ID, "email-input")))
+    password_field = wait.until(
+        EC.presence_of_element_located((By.ID, "password-input"))
+    )
+    submit_button = wait.until(EC.element_to_be_clickable((By.ID, "submit-button")))
+
+    email_field.send_keys(email)
+    password_field.send_keys(password)
+    submit_button.click()
 
 
+login(driver, wait, ACCOUNT_EMAIL, ACCOUNT_PASSWORD)
 # ------------------ SUMMARY FUNCTION ------------------
+total_bookings = 0
 
 
 def summary(
@@ -59,10 +65,16 @@ Total classes processed: {total_classes}
     )
 
 
+def verify_bookings(expected_bookings, total_bookings):
+    if expected_bookings == total_bookings:
+        print(f"Bookings verified")
+
+
 # ------------------ BOOK DAY FUNCTION ------------------
 
 
 def book_day(day: str):
+    global total_bookings
     booking_count = 0
     booked_waitlisted = 0
     waitlists_joined = 0
@@ -112,6 +124,7 @@ def book_day(day: str):
                 if "Booked" in text:
                     print(f"Already Booked: {class_name} at {date_text}")
                     booked_waitlisted += 1
+                    total_bookings += 1
 
                 elif "Join Waitlist" in text:
                     wait.until(EC.element_to_be_clickable(button))
@@ -125,6 +138,7 @@ def book_day(day: str):
                     button.click()
                     print(f"Booked class: {class_name} at {date_text}")
                     booking_count += 1
+                    total_bookings += 1
                     wait.until(lambda d: "Booked" in button.text)
 
                 elif "Waitlisted" in text:
@@ -153,9 +167,3 @@ def book_day(day: str):
             total_classes=len(buttons),
             date=date_text,
         )
-
-
-# ------------------ RUN ------------------
-
-book_day("Tue")
-book_day("Thu")
