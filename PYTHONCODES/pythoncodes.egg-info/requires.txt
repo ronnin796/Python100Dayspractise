@@ -1,0 +1,10 @@
+beautifulsoup4>=4.14.3
+djlint>=1.36.4
+lxml>=6.0.2
+pandas>=3.0.0
+pyperclip>=1.11.0
+python-decouple>=3.8
+requests>=2.32.5
+selenium>=4.40.0
+spotipy>=2.25.2
+twilio>=9.10.1

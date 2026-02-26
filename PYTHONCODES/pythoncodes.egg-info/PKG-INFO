@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: pythoncodes
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: beautifulsoup4>=4.14.3
+Requires-Dist: djlint>=1.36.4
+Requires-Dist: lxml>=6.0.2
+Requires-Dist: pandas>=3.0.0
+Requires-Dist: pyperclip>=1.11.0
+Requires-Dist: python-decouple>=3.8
+Requires-Dist: requests>=2.32.5
+Requires-Dist: selenium>=4.40.0
+Requires-Dist: spotipy>=2.25.2
+Requires-Dist: twilio>=9.10.1
