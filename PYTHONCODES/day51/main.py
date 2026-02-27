@@ -68,10 +68,17 @@ while elapsed < max_wait:
     time.sleep(poll_interval)
     elapsed += poll_interval
 
+DOWNLOAD_EXPECTED = 200
+UPLOAD_EXPECTED = 100
 if download_speed and upload_value:
     print(
         f"Download Speed: {download_speed} Mbps . Upload Speed: {upload_speed} Mbps ."
     )
+    download_speed = float(download_speed)
+    upload_speed = float(upload_speed)
+    if download_speed < DOWNLOAD_EXPECTED or upload_speed < UPLOAD_EXPECTED:
+        print("Internet speed is below expected. Opening Twitter...")
+        driver.get("https://x.com/")
 else:
     print("Failed to retrieve download speed after waiting.")
 
