@@ -5,13 +5,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 import time
+from decouple import config
+
+USERNAME = config("USERNAME")
 
 
 class InternetSpeedBot:
     def __init__(
         self,
         download_expected=200,
-        upload_expected=100,
+        upload_expected=400,
         max_wait=200,
         poll_interval=2,
     ):
@@ -104,7 +107,9 @@ class InternetSpeedBot:
                 or upload_speed < self.UPLOAD_EXPECTED
             ):
                 print("Internet speed is below expected. Opening Twitter...")
-                self.driver.get("https://x.com/")
+
+                self.login()
+
         else:
             print("Failed to retrieve download speed after waiting.")
 
@@ -113,9 +118,20 @@ class InternetSpeedBot:
         self.start_test()
         self.check_speed()
 
+    def login(self):
+        self.driver.get("https://x.com/")
+        login_button = self.driver.find_element(By.XPATH, '//a[@href="/login"]')
+        login_button.click()
+        username = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//input[@autocapitalize="sentences" and @autocorrect="on"]')
+            )
+        )
+        username.send_keys(USERNAME)
+
 
 # RUN THE BOT
 
 if __name__ == "__main__":
     bot = InternetSpeedBot()
-    bot.run()
+    bot.login()
