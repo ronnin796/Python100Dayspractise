@@ -128,6 +128,11 @@ class InternetSpeedBot:
             )
         )
         username.send_keys(USERNAME)
+        next_button = self.driver.find_element(
+            By.XPATH,
+            "//button[@role='button' and @type='button' and .//span[text()='Next']]",
+        )
+        next_button.click()
 
 
 # RUN THE BOT
