@@ -7,7 +7,8 @@ from selenium.common.exceptions import TimeoutException, StaleElementReferenceEx
 import time
 from decouple import config
 
-USERNAME = config("USERNAME")
+USERNAME = config("X_USERNAME")
+PASSWORD = config("X_PASSWORD")
 
 
 class InternetSpeedBot:
@@ -119,20 +120,35 @@ class InternetSpeedBot:
         self.check_speed()
 
     def login(self):
+
         self.driver.get("https://x.com/")
+
         login_button = self.driver.find_element(By.XPATH, '//a[@href="/login"]')
         login_button.click()
+
         username = self.wait.until(
             EC.presence_of_element_located(
                 (By.XPATH, '//input[@autocapitalize="sentences" and @autocorrect="on"]')
             )
         )
         username.send_keys(USERNAME)
+
         next_button = self.driver.find_element(
             By.XPATH,
             "//button[@role='button' and @type='button' and .//span[text()='Next']]",
         )
         next_button.click()
+
+        password = self.wait.until(
+            EC.presence_of_element_located((By.XPATH, '//input[@type="password"]'))
+        )
+        password.send_keys(PASSWORD)
+
+        login_submit = self.driver.find_element(
+            By.XPATH,
+            "//button[@role='button' and @type='button' and .//span[text()='Log in']]",
+        )
+        login_submit.click()
 
 
 # RUN THE BOT
