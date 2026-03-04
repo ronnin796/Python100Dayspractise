@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 import time
 from decouple import config
+import re
 
 RENTAL_LINK = "https://appbrewery.github.io/Zillow-Clone/"
 SHEET_LINK = config("SHEET_URL")
@@ -33,7 +34,46 @@ class rentalListing:
 
     def get_rentdata(self):
         self.driver.get(self.rentlink)
-        time.sleep(10)
+
+        self.wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "ul[class*='photo-cards']")
+            )
+        )
+
+        items = self.driver.find_elements(
+            By.CSS_SELECTOR, "ul[class*='photo-cards'] > li"
+        )
+
+        for item in items:
+            try:
+
+                price_element = item.find_element(
+                    By.CSS_SELECTOR, "[data-test='property-card-price']"
+                )
+                raw_price = price_element.text
+
+                price_number = re.search(r"\d[\d,]*", raw_price)
+                if price_number:
+                    cleaned_price = price_number.group().replace(",", "")
+                else:
+                    cleaned_price = None
+
+                address = item.find_element(
+                    By.CSS_SELECTOR, "[data-test='property-card-addr']"
+                ).text
+
+                link = item.find_element(
+                    By.CSS_SELECTOR, "[data-test='property-card-link']"
+                ).get_attribute("href")
+
+                print("Price:", cleaned_price)
+                print("Address:", address)
+                print("Link:", link)
+                print("-" * 50)
+
+            except Exception:
+                continue
 
     def close(self):
         self.driver.quit()
