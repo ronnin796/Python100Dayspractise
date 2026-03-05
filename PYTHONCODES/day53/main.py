@@ -62,11 +62,12 @@ class rentalListing:
                 address = item.find_element(
                     By.CSS_SELECTOR, "[data-test='property-card-addr']"
                 ).text
-
                 link = item.find_element(
                     By.CSS_SELECTOR, "[data-test='property-card-link']"
                 ).get_attribute("href")
-
+                self.rent_prices.append(cleaned_price + " $")
+                self.address_list.append(address)
+                self.links.append(link)
                 print("Price:", cleaned_price)
                 print("Address:", address)
                 print("Link:", link)
@@ -75,6 +76,27 @@ class rentalListing:
             except Exception:
                 continue
 
+    def fill_sheets(self):
+
+        data_length = len(self.address_list)
+
+        for i in range(data_length):
+
+            self.driver.get(SHEET_LINK)
+
+            text_fields = self.wait.until(
+                EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "input.whsOnd"))
+            )
+
+            text_fields[0].send_keys(self.address_list[i])
+            text_fields[1].send_keys(self.rent_prices[i])
+            text_fields[2].send_keys(self.links[i])
+
+            submit_button = self.driver.find_element(
+                By.XPATH, '//span[text()="Submit"]/ancestor::div[@role="button"]'
+            )
+            submit_button.click()
+
     def close(self):
         self.driver.quit()
 
@@ -82,4 +104,5 @@ class rentalListing:
 if __name__ == "__main__":
     bot = rentalListing()
     bot.get_rentdata()
+    bot.fill_sheets()
     bot.close()
