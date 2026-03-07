@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Nischal Chaudhary</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Sacramento"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  </head>
+
+  <body>
+    <div class="top-container">
+      <img
+        class="top-cloud"
+        src="{{ url_for('static', filename='images/cloud.png') }}"
+        alt="cloud"
+      />
+
+      <div class="title-text">
+        <h1>I'm Nischal.</h1>
+        <h2>a <span class="pro">Python</span> developer.</h2>
+      </div>
+
+      <img
+        class="bottom-cloud"
+        src="{{ url_for('static', filename='images/cloud.png') }}"
+        alt="cloud"
+      />
+
+      <img
+        class="mountain"
+        src="{{ url_for('static', filename='images/mountain.png') }}"
+        alt="mountain-img"
+      />
+    </div>
+
+    <div class="middle-container">
+      <div class="profile">
+        <img
+          src="{{ url_for('static', filename='images/profile.gif') }}"
+          alt="profile-img"
+        />
+
+        <h2>Hello.</h2>
+
+        <p class="intro">
+          I am a Python developer focused on backend engineering and Artificial
+          Intelligence. I work with Django, Machine Learning, and data-driven
+          systems. I enjoy building practical software, experimenting with AI
+          models, and solving real-world problems.
+        </p>
+      </div>
+
+      <hr />
+
+      <div class="skills">
+        <h2>My Skills.</h2>
+
+        <div class="skill-row">
+          <img
+            class="code-img"
+            src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif"
+            alt="coding-img"
+          />
+
+          <h3>Python & Backend Development</h3>
+
+          <p>
+            I build backend systems using Python and Django. My focus is on
+            building scalable APIs, automation tools, and full-stack
+            applications using Django, REST APIs, and modern web tools.
+          </p>
+        </div>
+
+        <div class="skill-row">
+          <img
+            class="chilli-img"
+            src="{{ url_for('static', filename='images/ml.png') }}"
+            alt="ml-img"
+          />
+
+          <h3>AI & Machine Learning</h3>
+
+          <p>
+            I am learning and building projects in Machine Learning and
+            Artificial Intelligence. I work with Python libraries like NumPy,
+            Pandas, and Scikit-Learn to analyze data and build predictive
+            models.
+          </p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="contact-me">
+        <h2>Get In Touch</h2>
+
+        <h3>If you like building things with Python and AI.</h3>
+
+        <p class="contact-message">
+          Interested in backend development, machine learning, or cool tech
+          projects? Let's connect and build something interesting together.
+        </p>
+
+        <a class="btn" href="mailto:nischal@example.com">CONTACT ME</a>
+      </div>
+    </div>
+
+    <div class="bottom-container">
+      <a class="footer-link" href="https://github.com/">GitHub</a>
+
+      <a class="footer-link" href="https://linkedin.com/">LinkedIn</a>
+
+      <a class="footer-link" href="https://twitter.com/">Twitter</a>
+
+      <p class="copyright">© 2026 Nischal Chaudhary.</p>
+    </div>
+  </body>
+</html>

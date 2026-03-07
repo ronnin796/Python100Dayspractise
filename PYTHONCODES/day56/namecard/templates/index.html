@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Identity - {{ user_name }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/noscript.css') }}"
+      />
+    </noscript>
+  </head>
+  <body class="is-loading">
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main">
+        <header>
+          <span class="avatar">
+            <img
+              src="{{ url_for('static', filename='images/profile.gif') }}"
+              alt="Avatar"
+            />
+          </span>
+          <h1>{{ user_name }}</h1>
+          <p>{{ user_title }}</p>
+        </header>
+
+        <!-- Footer -->
+        <footer>
+          <ul class="icons">
+            <li><a href="{{ twitter_link }}" class="fa-twitter">Twitter</a></li>
+            <li>
+              <a href="{{ instagram_link }}" class="fa-instagram">Instagram</a>
+            </li>
+            <li>
+              <a href="{{ facebook_link }}" class="fa-facebook">Facebook</a>
+            </li>
+          </ul>
+        </footer>
+      </section>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <ul class="copyright">
+          <li>&copy; {{ current_year }} {{ user_name }}</li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      if ("addEventListener" in window) {
+        window.addEventListener("load", function () {
+          document.body.className = document.body.className.replace(
+            /\bis-loading\b/,
+            "",
+          );
+        });
+        document.body.className += navigator.userAgent.match(/(MSIE|rv:11\.0)/)
+          ? " is-ie"
+          : "";
+      }
+    </script>
+  </body>
+</html>
