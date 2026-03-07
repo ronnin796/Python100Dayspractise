@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Age Result</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="age-card">
+      <h1>Hello There {{ my_name }}</h1>
+      <h2>You are probably a {{ gender }}.</h2>
+      <h2>High chance you are {{ age }} years old.</h2>
+      <a href="{{ url_for('get_blog') }}">View Blogs</a>
+    </div>
+  </body>
+  <footer id="footer">
+    <ul class="copyright">
+      <li>&copy; {{ current_year }} {{ my_name }}. All rights reserved.</li>
+      <li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
+    </ul>
+  </footer>
+</html>

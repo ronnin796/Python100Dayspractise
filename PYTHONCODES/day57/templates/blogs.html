@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Blogs</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Blog List</h1>
+
+    {% if id %} {% set blog = posts | selectattr('id', 'equalto', id) | first %}
+    {% if blog %}
+    <div class="blog-body">
+      <h2>{{ blog.title }}</h2>
+      <p>{{ blog.body }}</p>
+      <p><a href="{{ url_for('get_blog') }}">← Back to all blogs</a></p>
+    </div>
+    {% else %}
+    <p>Blog not found.</p>
+    <p><a href="{{ url_for('get_blog') }}">← Back to all blogs</a></p>
+    {% endif %} {% else %}
+    <ul class="blog-list">
+      {% for blog in posts %}
+      <li class="blog-card">
+        <h3>
+          <a href="{{ url_for('get_blog', id=blog.id) }}">{{ blog.title }}</a>
+        </h3>
+        <p>{{ blog.body[:100] }}...</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
