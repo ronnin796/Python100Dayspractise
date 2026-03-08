@@ -1,7 +1,9 @@
+from mailbox import Message
 from flask import Flask, render_template, request
 from datetime import date, datetime
 import requests
 from flask import abort
+from sendmail import send_mail
 
 app = Flask(__name__)
 
@@ -42,7 +44,19 @@ def about():
 @app.route("/contact", methods=["POST", "GET"])
 def contact():
     if request.method == "POST":
-        print(request.form)
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        message = request.form.get("message")
+
+        mail_text = f"""
+        Name : {name}
+        Email : {email}
+        Phone : {phone}
+        Message : {message}
+        """
+        send_mail("Blog contact request", mail_text)
+
         return render_template(
             "contact.html", message="Message Has been sent successfully"
         )
