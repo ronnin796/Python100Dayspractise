@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from datetime import date, datetime
 import requests
 from flask import abort
@@ -39,8 +39,13 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["POST", "GET"])
 def contact():
+    if request.method == "POST":
+        print(request.form)
+        return render_template(
+            "contact.html", message="Message Has been sent successfully"
+        )
     return render_template("contact.html")
 
 
