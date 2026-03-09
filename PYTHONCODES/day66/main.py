@@ -64,21 +64,100 @@ def get_all_cafe():
     return jsonify(cafe=[cafe.to_dict() for cafe in all_cafes])
 
 
-@app.route("/search/<location>", methods=["GET"])
-def search_cafe(location):
+@app.route("/search", methods=["GET"])
+def search_cafe():
+    location = request.args.get("loc")
     stmt = db.select(Cafe).where(Cafe.location.ilike(f"%{location}%"))
     results = db.session.execute(stmt).scalars().all()
 
     return jsonify(cafe=[cafe.to_dict() for cafe in results])
 
 
-# HTTP GET - Read Record
+@app.route("/add", methods=["POST"])
+def add_cafe():
+    try:
 
-# HTTP POST - Create Record
+        data = request.form
 
-# HTTP PUT/PATCH - Update Record
+        new_cafe = Cafe(
+            name=data.get("name"),
+            map_url=data.get("map_url"),
+            img_url=data.get("img_url"),
+            location=data.get("location"),
+            seats=data.get("seats"),
+            has_toilet=(data.get("has_toilet", "false").lower() == "true"),
+            has_wifi=(data.get("has_wifi", "false").lower() == "true"),
+            has_sockets=(data.get("has_sockets", "false").lower() == "true"),
+            can_take_calls=(data.get("can_take_calls", "false").lower() == "true"),
+            coffee_price=data.get("coffee_price"),
+        )
 
-# HTTP DELETE - Delete Record
+        db.session.add(new_cafe)
+        db.session.commit()
+
+        return jsonify({"success": True, "cafe": new_cafe.to_dict()}), 201
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+
+@app.route("/delete/<int:id>", methods=["POST"])
+def delete_cafe(id):
+    api_key = request.args.get("API_KEY", None)
+    if api_key == "TOPSECRETKEY":
+        try:
+
+            cafe = Cafe.query.get(id)
+            if not cafe:
+                return jsonify({"success": False, "error": "Cafe not found"}), 404
+
+            db.session.delete(cafe)
+            db.session.commit()
+
+            return (
+                jsonify(
+                    {"success": True, "message": f"Cafe with id {id} has been deleted"}
+                ),
+                200,
+            )
+
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+    else:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": {"Forbidden": "Sorry, Not allowed with proper api key."},
+                }
+            ),
+            404,
+        )
+
+
+@app.route("/update-price/<int:id>", methods=["PATCH"])
+def update_price(id):
+    new_price = request.args.get("new_price")
+    try:
+        cafe = Cafe.query.get(id)
+        if not cafe:
+            return jsonify({"success": False, "error": "Cafe not found"}), 404
+        else:
+            cafe.coffee_price = new_price
+        db.session.commit()
+
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "message": f"Cafe with id {id} has updated coffee price.",
+                }
+            ),
+            200,
+        )
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
 
 
 if __name__ == "__main__":
