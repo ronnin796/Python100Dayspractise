@@ -83,7 +83,6 @@ def add_cafe():
                 [cafe_name, location, open_time, close_time, coffee, wifi, power]
             )
 
-        # Optionally redirect after submission
         return redirect(url_for("add_cafe"))
 
     return render_template("add.html", form=form)
