@@ -5,11 +5,13 @@ Summary: Add your description here
 Requires-Python: >=3.12
 Description-Content-Type: text/markdown
 Requires-Dist: beautifulsoup4>=4.14.3
+Requires-Dist: bleach>=6.3.0
 Requires-Dist: bootstrap-flask>=2.5.0
 Requires-Dist: djlint>=1.36.4
 Requires-Dist: email-validator>=2.3.0
 Requires-Dist: flask>=3.1.3
 Requires-Dist: flask-bootstrap>=3.3.7.1
+Requires-Dist: flask-ckeditor>=1.0.0
 Requires-Dist: flask-sqlalchemy>=3.1.1
 Requires-Dist: flask-wtf>=1.2.2
 Requires-Dist: lxml>=6.0.2
