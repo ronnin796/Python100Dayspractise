@@ -127,9 +127,9 @@ def edit_movie(id):
 
 @app.route("/delete/<int:id>", methods=["POST"])
 def delete_movie(id):
-    movie = Movies.query.get_or_404(id)  # fetch the movie
-    db.session.delete(movie)  # delete from DB
-    db.session.commit()  # commit changes
+    movie = Movies.query.get_or_404(id)
+    db.session.delete(movie)
+    db.session.commit()
     flash(f"Movie '{movie.title}' deleted successfully!")
     return redirect(url_for("home"))
 

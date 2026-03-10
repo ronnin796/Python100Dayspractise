@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_field %}
+{% block content %}
+    <div class="container my-5">
+        <h1 class="mb-4">Register</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    {% for field in form %}
+                        {% if field.name not in ["csrf_token", "is_admin"] %}{{ render_field(field) }}{% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
