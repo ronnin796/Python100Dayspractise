@@ -2,20 +2,20 @@
 {% block content %}
   <!-- Page Header -->
   <header class="masthead"
-          style="background-image: url('../static/assets/img/home-bg.jpg')">
+          style="background-image: url('{{ url_for('static', filename='assets/img/home-bg.jpg') }}')">
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-          <div class="site-heading">
-            <h1>Clean Blog</h1>
-            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+          <div class="site-heading text-center">
+            <h1>Nischal's Blog</h1>
+            <span class="subheading">Thoughts on Programming, Technology, and Learning</span>
           </div>
         </div>
       </div>
     </div>
   </header>
   <!-- Main Content -->
-  <div class="container px-4 px-lg-5">
+  <div class="container px-4 px-lg-5 mt-4">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         {% for post in all_posts %}
@@ -25,18 +25,33 @@
               <h3 class="post-subtitle">{{ post.subtitle }}</h3>
             </a>
             <p class="post-meta">
-              Posted by <a href="#">{{ post.author }}</a> on {{ post.date }}
-              <a href="{{ url_for('blog.delete_post', id=post.id) }}">✘</a>
+              Written by <strong>{{ post.author.name }}</strong> · {{ post.date }}
+              {% if current_user.is_authenticated and current_user.is_admin %}
+                <a class="text-danger ms-2"
+                   href="{{ url_for('blog.delete_post', id=post.id) }}">Delete</a>
+              {% endif %}
             </p>
           </div>
           <hr class="my-4" />
         {% endfor %}
-        <div class="d-flex justify-content-end mb-4">
-          <a class="btn btn-primary float-right"
-             href="{{ url_for("blog.add_post") }}">Create New Post</a>
-        </div>
-        <div class="d-flex justify-content-end mb-4">
-          <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
+        <!-- Create Post Button -->
+        {% if current_user.is_authenticated and current_user.is_admin %}
+          <div class="d-flex justify-content-end mb-4">
+            <a class="btn btn-primary" href="{{ url_for("blog.add_post") }}">Create New Post</a>
+          </div>
+        {% endif %}
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between mb-4">
+          {% if has_prev %}
+            <a class="btn btn-outline-secondary text-uppercase"
+               href="{{ url_for('blog.get_all_posts', page=page-1) }}">← Newer Posts</a>
+          {% else %}
+            <span></span>
+          {% endif %}
+          {% if has_next %}
+            <a class="btn btn-outline-secondary text-uppercase"
+               href="{{ url_for('blog.get_all_posts', page=page+1) }}">Older Posts →</a>
+          {% endif %}
         </div>
       </div>
     </div>

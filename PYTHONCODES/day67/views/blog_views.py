@@ -11,9 +11,31 @@ blog_bp = Blueprint("blog", __name__)
 
 @blog_bp.route("/")
 def get_all_posts():
-    result = db.session.execute(db.select(BlogPost))
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+
+    total_posts = db.session.execute(db.select(BlogPost)).scalars().all()
+    total_count = len(total_posts)
+
+    stmt = (
+        db.select(BlogPost)
+        .order_by(BlogPost.date.desc())
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+    )
+    result = db.session.execute(stmt)
     all_posts = result.scalars().all()
-    return render_template("index.html", all_posts=all_posts)
+
+    has_next = page * per_page < total_count
+    has_prev = page > 1
+
+    return render_template(
+        "index.html",
+        all_posts=all_posts,
+        page=page,
+        has_next=has_next,
+        has_prev=has_prev,
+    )
 
 
 @blog_bp.route("/post/<int:post_id>")
@@ -53,7 +75,7 @@ def add_post():
             title=form.title.data,
             subtitle=form.subtitle.data,
             body=form.body.data,
-            author=form.author.data,
+            author=current_user,
             img_url=form.img_url.data,
             date=date.today().strftime("%B %d, %Y"),
         )
@@ -79,7 +101,7 @@ def edit_post(post_id):
         title=post.title,
         subtitle=post.subtitle,
         body=post.body,
-        author=post.author,
+        author=current_user,
         img_url=post.img_url,
     )
 
@@ -88,7 +110,7 @@ def edit_post(post_id):
         post.title = form.title.data
         post.subtitle = form.subtitle.data
         post.body = form.body.data
-        post.author = form.author.data
+        post.author = current_user
         post.img_url = form.img_url.data
         post.date = date.today().strftime("%B %d, %Y")
 
@@ -142,3 +164,24 @@ def contact():
             "contact.html", message="Message Has been sent successfully"
         )
     return render_template("contact.html")
+
+
+@blog_bp.route("/delete_comment/<int:id>", methods=["POST"])
+@login_required
+def delete_comment(id):
+    comment = db.session.get(Comment, id)
+
+    if not comment:
+        flash("Comment not found.", "danger")
+        return redirect(request.referrer or url_for("blog_bp.get_all_posts"))
+
+    if comment.user_id != current_user.id:
+        flash("You are not authorized to delete this comment.", "danger")
+        return redirect(request.referrer or url_for("blog_bp.get_all_posts"))
+
+    db.session.delete(comment)
+    db.session.commit()
+
+    flash("Comment has been deleted successfully!", "success")
+
+    return redirect(request.referrer or url_for("blog_bp.get_all_posts"))

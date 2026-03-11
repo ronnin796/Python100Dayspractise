@@ -10,7 +10,7 @@
             <h1>{{ post.title }}</h1>
             <h2 class="subheading">{{ post.subtitle }}</h2>
             <span class="meta">
-              Posted by <a href="#">{{ post.author }}</a> on {{ post.date }}
+              Posted by <a href="#">{{ post.author.name }}</a> on {{ post.date }}
             </span>
           </div>
         </div>
@@ -45,12 +45,24 @@
         {% if post.comments %}
           {% for comment in post.comments %}
             <div class="d-flex gap-3 mb-4">
+              <!-- Avatar -->
               <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center flex-shrink-0"
                    style="width:44px;
                           height:44px;
                           font-weight:bold">{{ comment.author.name[0].upper() }}</div>
+              <!-- Comment content -->
               <div class="flex-grow-1">
-                <div class="fw-bold">{{ comment.author.name }}</div>
+                <div class="d-flex justify-content-between align-items-start">
+                  <div class="fw-bold">{{ comment.author.name }}</div>
+                  <!-- Delete button: show only if current user is author -->
+                  {% if current_user.is_authenticated and comment.author.id == current_user.id %}
+                    <form action="{{ url_for('blog.delete_comment', id=comment.id) }}"
+                          method="POST"
+                          style="display:inline">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  {% endif %}
+                </div>
                 <div class="text-muted">{{ comment.text|safe }}</div>
               </div>
             </div>
