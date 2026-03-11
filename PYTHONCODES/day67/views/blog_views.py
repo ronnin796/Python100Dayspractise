@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required, current_user
 from extensions import db
-from models import BlogPost
-from forms import BlogPostForm
+from models import BlogPost, Comment
+from forms import BlogPostForm, CommentForm
 from datetime import date
+from utils import admin_required, send_mail
 
 blog_bp = Blueprint("blog", __name__)
 
@@ -16,13 +18,33 @@ def get_all_posts():
 
 @blog_bp.route("/post/<int:post_id>")
 def show_post(post_id):
+    form = CommentForm()
     requested_post = db.session.execute(
         db.select(BlogPost).where(BlogPost.id == post_id)
     ).scalar()
-    return render_template("post.html", post=requested_post)
+    return render_template("post.html", post=requested_post, comment_form=form)
+
+
+@blog_bp.route("/comment/<int:post_id>", methods=["POST"])
+@login_required
+def comment(post_id):
+    form = CommentForm()
+    post = db.session.execute(
+        db.select(BlogPost).where(BlogPost.id == post_id)
+    ).scalar()
+    if form.validate_on_submit():
+        comment = Comment(
+            text=form.text.data,
+            author=current_user,
+            post=post,
+        )
+        db.session.add(comment)
+        db.session.commit()
+    return redirect(url_for("blog.show_post", post_id=post_id))
 
 
 @blog_bp.route("/add/", methods=["GET", "POST"])
+@admin_required
 def add_post():
     form = BlogPostForm()
 
@@ -45,6 +67,7 @@ def add_post():
 
 
 @blog_bp.route("/edit/<int:post_id>", methods=["GET", "POST"])
+@admin_required
 def edit_post(post_id):
     post = db.session.get(BlogPost, post_id)
 
@@ -78,6 +101,7 @@ def edit_post(post_id):
 
 
 @blog_bp.route("/delete/<int:id>")
+@admin_required
 def delete_post(id):
     post = db.session.get(BlogPost, id)
 
@@ -97,6 +121,24 @@ def about():
     return render_template("about.html")
 
 
-@blog_bp.route("/contact")
+@blog_bp.route("/contact", methods=["POST", "GET"])
+@login_required
 def contact():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        message = request.form.get("message")
+
+        mail_text = f"""
+        Name : {name}
+        Email : {email}
+        Phone : {phone}
+        Message : {message}
+        """
+        send_mail("Blog contact request", mail_text)
+
+        return render_template(
+            "contact.html", message="Message Has been sent successfully"
+        )
     return render_template("contact.html")

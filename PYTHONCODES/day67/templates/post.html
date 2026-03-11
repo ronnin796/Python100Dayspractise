@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
 {% block content %}
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('{{ post.img_url }}')">
@@ -23,11 +24,42 @@
         <div class="col-md-10 col-lg-8 col-xl-7">
           {{ post.body|safe }}
           <div class="d-flex justify-content-end mb-4">
-            <a class="btn btn-primary float-right"
+            <a class="btn btn-primary"
                href="{{ url_for('blog.edit_post', post_id=post.id) }}">Edit Post</a>
           </div>
         </div>
       </div>
     </div>
   </article>
+  <!-- Comment Form -->
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <hr class="my-4">
+        <h4 class="mb-4">Leave a Comment</h4>
+        {{ render_form(comment_form, action=url_for('blog.comment', post_id=post.id) , method="POST", novalidate=True) }}
+        {{ ckeditor.load() }}
+        <!-- Comments List -->
+        <hr class="my-4">
+        <h4 class="mb-4">{{ post.comments|length }} Comment{{ 's' if post.comments|length != 1 }}</h4>
+        {% if post.comments %}
+          {% for comment in post.comments %}
+            <div class="d-flex gap-3 mb-4">
+              <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center flex-shrink-0"
+                   style="width:44px;
+                          height:44px;
+                          font-weight:bold">{{ comment.author.name[0].upper() }}</div>
+              <div class="flex-grow-1">
+                <div class="fw-bold">{{ comment.author.name }}</div>
+                <div class="text-muted">{{ comment.text|safe }}</div>
+              </div>
+            </div>
+            {% if not loop.last %}<hr class="my-2">{% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="text-muted fst-italic">No comments yet. Be the first!</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock %}
