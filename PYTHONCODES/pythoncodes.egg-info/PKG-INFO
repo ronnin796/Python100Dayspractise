@@ -17,6 +17,7 @@ Requires-Dist: flask-sqlalchemy>=3.1.1
 Requires-Dist: flask-wtf>=1.2.2
 Requires-Dist: ipykernel>=7.2.0
 Requires-Dist: lxml>=6.0.2
+Requires-Dist: matplotlib>=3.10.8
 Requires-Dist: pandas>=3.0.0
 Requires-Dist: psycopg2-binary>=2.9.11
 Requires-Dist: pyperclip>=1.11.0
